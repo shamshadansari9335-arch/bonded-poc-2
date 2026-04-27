@@ -1,0 +1,8 @@
+{
+  "name": "bonded-poc-2",
+  "version": "1.0.0",
+  "dependencies": {
+    "redis": "^4.6.0",
+    "dotenv": "^16.0.0"
+  }
+}

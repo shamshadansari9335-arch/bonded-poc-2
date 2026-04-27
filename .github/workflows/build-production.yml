@@ -1,0 +1,38 @@
+name: Test Build Production (POC-2)
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Test Build Production
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://bonded-poc-2-production.us-west1.run.app
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create .env from template
+        env:
+          APP_ENV: ${{ vars.APP_ENV }}
+          APP_VERSION: ${{ vars.APP_VERSION }}
+        run: envsubst < .env.template > .env
+
+      - name: Test build
+        run: |
+          node server.js &
+          sleep 2
+          curl -f http://localhost:8080 || exit 1
